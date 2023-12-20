@@ -1,0 +1,136 @@
+[gd_scene load_steps=11 format=3 uid="uid://b7aqmx3gqlhmu"]
+
+[ext_resource type="Texture2D" uid="uid://lig0gduma3sf" path="res://assets/Bg.png" id="1_xgwf0"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="2_bplom"]
+[ext_resource type="FontFile" uid="uid://cegqamj7pv4fe" path="res://assets/pixel_font.ttf" id="2_mbh0o"]
+[ext_resource type="Script" path="res://scenes/Player.gd" id="3_1y5bo"]
+[ext_resource type="Script" path="res://scenes/CPU.gd" id="4_8tqjq"]
+[ext_resource type="Script" path="res://scenes/Ball.gd" id="4_u6cu1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7fd3l"]
+size = Vector2(20, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_woxre"]
+size = Vector2(10, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tkfrq"]
+size = Vector2(1152, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fcdkg"]
+size = Vector2(56, 648)
+
+[node name="Main" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_xgwf0")
+centered = false
+script = ExtResource("2_bplom")
+
+[node name="Player" type="StaticBody2D" parent="."]
+position = Vector2(50, 324)
+script = ExtResource("3_1y5bo")
+
+[node name="ColorRect" type="ColorRect" parent="Player"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_right = 20.0
+offset_bottom = 60.0
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(10, 0)
+shape = SubResource("RectangleShape2D_7fd3l")
+
+[node name="CPU" type="StaticBody2D" parent="."]
+position = Vector2(1082, 324)
+script = ExtResource("4_8tqjq")
+
+[node name="ColorRect" type="ColorRect" parent="CPU"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_right = 20.0
+offset_bottom = 60.0
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CPU"]
+position = Vector2(10, 0)
+shape = SubResource("RectangleShape2D_7fd3l")
+
+[node name="Ball" type="CharacterBody2D" parent="."]
+position = Vector2(576, 324)
+collision_mask = 3
+script = ExtResource("4_u6cu1")
+
+[node name="ColorRect" type="ColorRect" parent="Ball"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("RectangleShape2D_woxre")
+
+[node name="Borders" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="Top" type="CollisionShape2D" parent="Borders"]
+position = Vector2(576, -30)
+shape = SubResource("RectangleShape2D_tkfrq")
+
+[node name="Bottom" type="CollisionShape2D" parent="Borders"]
+position = Vector2(576, 678)
+shape = SubResource("RectangleShape2D_tkfrq")
+
+[node name="ScoreLeft" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreLeft"]
+position = Vector2(-28, 324)
+shape = SubResource("RectangleShape2D_fcdkg")
+
+[node name="ScoreRight" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreRight"]
+position = Vector2(1180, 324)
+shape = SubResource("RectangleShape2D_fcdkg")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="PlayerScore" type="Label" parent="HUD"]
+offset_left = 456.0
+offset_top = 5.0
+offset_right = 506.0
+offset_bottom = 55.0
+theme_override_fonts/font = ExtResource("2_mbh0o")
+theme_override_font_sizes/font_size = 50
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CPUScore" type="Label" parent="HUD"]
+offset_left = 648.0
+offset_top = 5.0
+offset_right = 698.0
+offset_bottom = 55.0
+theme_override_fonts/font = ExtResource("2_mbh0o")
+theme_override_font_sizes/font_size = 50
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BallTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="BallTimer" to="." method="_on_ball_timer_timeout"]
